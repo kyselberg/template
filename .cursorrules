@@ -1,0 +1,126 @@
+# Cursor Rules - Design to Code Template
+
+This repository follows strict mobile-first, responsive design principles using Tailwind CSS v4 and React.
+
+## Technology Stack
+
+- **Framework**: React (Functional Components with Hooks)
+- **Styling**: Tailwind CSS v4 (CSS-based configuration, NO `tailwind.config.js`)
+- **Animation**: Framer Motion
+- **Build Tool**: Vite
+
+## Tailwind CSS v4 & Styling Rules
+
+- **Configuration**: All theme configuration must be in `src/index.css` under the `@theme` directive.
+- **Mobile-First**: Design for 320px - 428px width first.
+- **Units**: Use `clamp()` for fluid typography, spacing, and padding to ensure adaptability across mobile viewports.
+- **Constraints**:
+  - Max container width: 428px (for mobile flows)
+  - Max content width: `min(90vw, 343px)`
+  - Minimum touch target: 44px
+
+## Component Structure
+
+Organize components into these directories:
+
+- `src/components/shell/`: Layout wrappers (e.g., OnboardingShell)
+- `src/components/steps/`: Individual flow steps (e.g., HeroStep)
+- `src/components/ui/`: Reusable UI atoms (buttons, inputs)
+- `src/components/content/`: Text or media blocks
+
+## Reference Implementation
+
+Check `src/examples/` for reference code implementing these rules. This directory contains:
+
+- `src/examples/components/`: Example component implementations
+- `src/examples/hooks/`: Example hooks
+- `src/examples/pages/`: Example page layouts
+
+Treat `src/examples/` as a read-only reference when building new features.
+
+## Critical Responsive Patterns
+
+### 1. Containers
+
+Always use a flexible container with a max-width constraint for mobile flows.
+
+```tsx
+<div className="w-full max-w-[428px] mx-auto px-[clamp(16px,4vw,24px)]">
+  {children}
+</div>
+```
+
+### 2. Images
+
+Images must scale but never overflow.
+
+```tsx
+<img
+  src={src}
+  alt={alt}
+  style={{
+    width: "100%",
+    maxWidth: "min(75vw, 280px)",
+    height: "auto",
+    aspectRatio: "1",
+  }}
+/>
+```
+
+### 3. Typography
+
+Use fluid typography with `clamp()`.
+
+```tsx
+<h1 style={{ fontSize: 'clamp(28px, 8vw, 32px)' }}>Title</h1>
+<p style={{ fontSize: 'clamp(15px, 4vw, 16px)' }}>Body text</p>
+```
+
+### 4. Buttons
+
+Full-width buttons with max constraints and minimum touch targets.
+
+```tsx
+<button
+  style={{
+    width: "100%",
+    maxWidth: "min(90vw, 343px)",
+    minHeight: "50px",
+    padding: "clamp(12px, 3vw, 16px) clamp(16px, 4vw, 24px)",
+  }}
+>
+  Button Text
+</button>
+```
+
+### 5. Layouts
+
+Use flexible column layouts that adapt to screen height.
+
+```tsx
+<div
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    minHeight: "calc(100dvh - var(--header-height) - var(--footer-height))",
+    padding: "clamp(16px, 4vw, 24px)",
+    gap: "clamp(16px, 3vh, 24px)",
+  }}
+>
+  {children}
+</div>
+```
+
+## Animation Guidelines
+
+- Use `framer-motion` for all animations.
+- Import standard variants from `@/utils/animations`.
+- Common variants: `pageSlide`, `fadeIn`, `slideUp`, `scaleIn`, `buttonTap`.
+
+## Code Conventions
+
+- Use functional components.
+- Use named exports.
+- Include `data-testid` attributes for testing.
+- Prefer `style={{ ... }}` for complex dynamic values like `clamp()` if Tailwind classes become too verbose or unreadable, but prefer Tailwind classes for standard utility usage.
